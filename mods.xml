@@ -1,0 +1,97 @@
+<file name="Home.template.php">
+  <operation>
+    <search position="before"><![CDATA[function template_home_topics($args)]]></search>
+    <add><![CDATA[
+function explodeToIntegers($delimiter, $str) {
+	if (strpos($str, $delimiter) === false) {
+		return (int) $str;
+	}
+	$integers = [];
+	foreach (explode($delimiter, $str) as $prep) {
+		$integers[] = (int) $prep;
+	}
+	return $integers;
+}
+
+function nextStep($steps, $n) {
+	sort($steps);
+	foreach ($steps as $step) {
+		if( $n < $step) return $step;
+	}
+	// Otherwise return last element
+	return array_values(array_slice($steps, -1))[0];;
+}
+// Counter for home_topics. If we have more than one, we want to known
+// which one we are.
+$nc = 0;
+
+]]></add>
+  </operation>
+  <operation>
+    <search position="replace"><![CDATA[$n = isset($_REQUEST['n']) ? (int) $_REQUEST['n'] : ($n ?: 5);]]></search>
+    <add><![CDATA[
+      global $nc;
+
+    	log_error($args);
+    	$n = 0;
+    	$title = $txt['recent_posts'];
+    	$include_boards = [];
+    	$exclude_boards = [];
+    	$show_board_index = true;
+    	$steps = [5, 10, 20, 50, 100];
+
+    	if(isset($args)) {
+    		$args = explode('|', $args);
+    		if(isset($args[0])) {
+    			$n = (int) $args[0];
+    		}
+    		if(isset($args[1])) {
+    			$title = $args[1];
+    		}
+    		if(!empty($args[2]) ) {
+    			$include_boards = explodeToIntegers(';', $args[2]);
+    		}
+    		if(!empty($args[3])) {
+    			$exclude_boards = explodeToIntegers(';', $args[3]);
+    		}
+    		if(!empty($args[4])) {
+    			$show_board_index = filter_var($args[4], FILTER_VALIDATE_BOOLEAN);
+    		}
+    		if(!empty($args[5])) {
+    			$steps = explodeToIntegers(';', $args[5]);
+    		}
+    	}
+
+    	$n = isset($_REQUEST['n'.$nc]) ? (int) $_REQUEST['n'.$nc ] : ($n ?: 5);
+
+    ]]></add>
+  </operation>
+  <operation>
+    <search position="replace"><![CDATA[$next = $n < 50 ? ($n < 20 ? ($n < 10 ? 10 : 20) : 50) : 100;]]></search>
+    <add><![CDATA[
+      $next = nextStep($steps, $n);
+      // Build next_url.
+    	$GET = $_GET; // COPY $_GET
+    	$GET['n'.$nc] = $next; // Set current n.nc to $next
+    	$next_url = '<URL>?'.http_build_query($GET, null, '&'); // build next_url
+]]></add>
+  </operation>
+  <operation>
+    <search position="replace"><![CDATA['
+		<span class="floatright"><a href="<URL>?action=boards">' . $txt['board_index'] . '</a></span>']]></search>
+    <add><![CDATA[($show_board_index == true ? '
+  		<span class="floatright"><a href="<URL>?action=boards">' . $txt['board_index'] . '</a></span>' : ''),]]></add>
+  </operation>
+  <operation>
+    <search position="replace"><![CDATA[$txt['recent_posts']]]></search>
+    <add>$title</add>
+  </operation>
+  <operation>
+    <search position="after"><![CDATA[echo '
+    		</table>
+    	</we:block>';]]></search>
+    <add><![CDATA[
+	$nc++;]]></add>
+  </operation>
+
+</file>
