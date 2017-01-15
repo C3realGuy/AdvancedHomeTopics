@@ -1,7 +1,0 @@
-<?xml version="1.0" standalone="yes" ?>
-<plugin id="CeralGuy:AdvancedHomeTopics">
-	<name>Advanced Home Topics</name>
-	<author>CerealGuy</author>
-	<description>Gives you more control over 'recent posts' alias topics on home.</description>
-	<version>1.0</version>
-</plugin>
