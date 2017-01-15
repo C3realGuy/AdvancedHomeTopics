@@ -8,6 +8,12 @@ Features:
   - Limit include boards
   - Limit exclude boards
   - Modify steps in which n increases
+  
+Can you give me an Example?
+===========================
+
+Sure, look here:
+![alt text](https://raw.githubusercontent.com/C3realGuy/AdvancedHomeTopics/master/advancedhometopics.png)
 
 How to install?
 ===============
