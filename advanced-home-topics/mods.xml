@@ -44,10 +44,10 @@ function template_home_topics($args)
 
 	if(isset($args)) {
 		$args = explode('|', $args);
-		if(isset($args[0])) {
+		if(!empty($args[0])) {
 			$n = (int) $args[0];
 		}
-		if(isset($args[1])) {
+		if(!empty($args[1])) {
 			$title = $args[1];
 		}
 		if(!empty($args[2]) ) {
@@ -92,6 +92,10 @@ function template_home_topics($args)
   <operation>
     <search position="replace"><a href="?n=' . $next . '"</search>
     <add><a href="'.$next_url.'"</add>
+  </operation>
+  <operation>
+    <search position="replace">ssi_recentTopicTitles($n, null, null, 'naos');</search>
+    <add>ssi_recentTopicTitles($n, $exclude_boards, $include_boards, 'naos');</add>
   </operation>
   <operation>
     <search position="after"></we:block>';</search>
