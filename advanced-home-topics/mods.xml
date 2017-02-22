@@ -25,7 +25,7 @@ function nextStep($steps, $n) {
 // which one we are.
 $nc = 0;
 
-function template_home_topics($args)
+function template_home_topics($args = 0)
     </add>
   </operation>
   <operation>
